@@ -24,7 +24,7 @@ docker run --rm ghcr.io/aasaam/url-info:latest -h
 Default cache dir is `/tmp` for change set env variable `ASM_URL_INFO_TEMPORARY_PATH=/path/you/want`
 
 ```bash
-$ curl -s -X POST -H 'Content-Type: application/json' -d '{"url":"https://news.yahoo.com//","image_resize":"720x240", "image_quality":85}' http://127.0.0.1:4000/info | jq
+$ curl -s -X POST -H 'Content-Type: application/json' -d '{"url":"https://news.yahoo.com/","image_resize":"720x240", "image_quality":85}' http://127.0.0.1:4000/info | jq
 {
   "title": "Yahoo News - Latest News &amp; Headlines",
   "lang": "en",
