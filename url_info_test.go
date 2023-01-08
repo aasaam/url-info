@@ -13,6 +13,7 @@ func TestNewURL000(t *testing.T) {
 		return
 	}
 	u.process(urlInfoProcess{
+		URL:          "http://news.yahoo.com/",
 		ImageResize:  "720x240!",
 		ImageQuality: 30,
 	})
