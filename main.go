@@ -16,7 +16,7 @@ func runServer(c *cli.Context) error {
 		UnescapePath:          true,
 		CaseSensitive:         true,
 		StrictRouting:         true,
-		BodyLimit:             1 * 512,
+		BodyLimit:             c.Int("body-limit-size"),
 
 		ErrorHandler: func(ctx *fiber.Ctx, err error) error {
 			code := fiber.StatusInternalServerError
@@ -40,6 +40,7 @@ func runServer(c *cli.Context) error {
 
 		cacheID := processInfo.cache()
 		cacheFile := cachePath(cacheID, "json")
+
 		if fileExist(cacheFile) {
 			return c.SendFile(cacheFile)
 		}
@@ -87,6 +88,13 @@ func main() {
 					Value:    "0.0.0.0:4000",
 					Required: false,
 					EnvVars:  []string{"ASM_URL_INFO_LISTEN_ADDRESS"},
+				},
+				&cli.IntFlag{
+					Name:     "body-limit-size",
+					Usage:    "Request limit size",
+					Value:    2 * 1024 * 1024,
+					Required: false,
+					EnvVars:  []string{"ASM_URL_INFO_BODY_LIMIT_SIZE"},
 				},
 			},
 		},
