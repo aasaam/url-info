@@ -122,7 +122,7 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 	ui.Direction = getLanguageDirection(ui.Language)
 
 	// title
-	titleOG, titleOGExist := doc.Find("head meta[property='og:title']").First().Attr("content")
+	titleOG, titleOGExist := doc.Find("head meta[property='og:title'],head meta[name='og:title']").First().Attr("content")
 	if titleOGExist {
 		ui.Title = sanitizeText(titleOG)
 	} else {
@@ -130,7 +130,7 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 	}
 
 	// description
-	descriptionOG, descriptionOGExist := doc.Find("head meta[property='og:description']").First().Attr("content")
+	descriptionOG, descriptionOGExist := doc.Find("head meta[property='og:description'],head meta[name='og:description']").First().Attr("content")
 	if descriptionOGExist {
 		ui.Description = sanitizeText(descriptionOG)
 	} else {
@@ -165,7 +165,7 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 
 	ui.Icon = "data:image/png;base64," + faviconConvert(ui.url)
 
-	imageOg, imageOgExist := doc.Find("head meta[property='og:image']").First().Attr("content")
+	imageOg, imageOgExist := doc.Find("head meta[property='og:image'],head meta[name='og:image']").First().Attr("content")
 	if imageOgExist {
 		imageOgURLString, imageOgURLStringErr := purell.NormalizeURLString(imageOg, defaultURLSanitize)
 		if imageOgURLStringErr == nil {
