@@ -6,7 +6,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/PuerkitoBio/purell v1.2.0
 	github.com/gofiber/fiber/v2 v2.41.0
-	github.com/microcosm-cc/bluemonday v1.0.21
+	github.com/microcosm-cc/bluemonday v1.0.22
 	github.com/urfave/cli/v2 v2.23.7
 	golang.org/x/text v0.6.0
 )
