@@ -8,7 +8,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/urfave/cli/v2 v2.23.7
-	golang.org/x/text v0.6.0
+	golang.org/x/text v0.7.0
 )
 
 require (
