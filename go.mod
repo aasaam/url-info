@@ -8,7 +8,7 @@ require (
 	github.com/gofiber/fiber/v2 v2.41.0
 	github.com/microcosm-cc/bluemonday v1.0.21
 	github.com/urfave/cli/v2 v2.23.7
-	golang.org/x/text v0.6.0
+	golang.org/x/text v0.8.0
 )
 
 require (
@@ -28,5 +28,5 @@ require (
 	github.com/valyala/tcplisten v1.0.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	golang.org/x/net v0.0.0-20221002022538-bcab6841153b // indirect
-	golang.org/x/sys v0.0.0-20220811171246-fbc7d0a398ab // indirect
+	golang.org/x/sys v0.5.0 // indirect
 )
