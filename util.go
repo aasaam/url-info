@@ -15,6 +15,7 @@ import (
 	"strings"
 
 	"github.com/microcosm-cc/bluemonday"
+	"golang.org/x/net/publicsuffix"
 	"golang.org/x/text/language"
 )
 
@@ -36,6 +37,19 @@ func init() {
 	for _, v := range rtlLanguages {
 		rtlLanguagesMap[v] = true
 	}
+}
+
+func validPublicSuffix(u *url.URL) bool {
+	host := u.Hostname()
+	eTLD, icann := publicsuffix.PublicSuffix(host)
+
+	if icann {
+		return true
+	} else if strings.IndexByte(eTLD, '.') >= 0 {
+		return true
+	}
+
+	return false
 }
 
 func urlWithoutPathAndQuery(u *url.URL) *url.URL {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"io"
 	"net"
 	"net/http"
@@ -72,6 +73,10 @@ func newURL(u string) (*urlInfo, error) {
 
 	if urE != nil {
 		return nil, urE
+	}
+
+	if !validPublicSuffix(ur) {
+		return nil, errors.New("invalid public suffix")
 	}
 
 	o := urlInfo{
