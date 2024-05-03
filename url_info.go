@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -206,6 +207,8 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 			}
 
 			videoWidthOg, videoWidthOgExist := doc.Find("head meta[property='og:video:width'],head meta[name='og:video:width']").First().Attr("content")
+			fmt.Println("videoWidthOg", videoWidthOg)
+
 			if videoWidthOgExist {
 				ui.VideoWidth = sanitizeIntPointer(videoWidthOg)
 			}

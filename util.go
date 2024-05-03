@@ -182,8 +182,8 @@ func sanitizeText(t string) string {
 
 func sanitizeIntPointer(s string) *int {
 	i, e := strconv.Atoi(s)
-	if e != nil || i <= 0 {
-		return nil
+	if e == nil && i > 0 {
+		return &i
 	}
 	return nil
 }
