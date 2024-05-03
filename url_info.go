@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"net"
 	"net/http"
@@ -39,19 +38,22 @@ type urlInfo struct {
 	audio_url  *url.URL
 	canonical  *url.URL
 
-	Title            string   `json:"title,omitempty"`
-	Language         string   `json:"lang,omitempty"`
-	Direction        string   `json:"dir,omitempty"`
-	Keywords         []string `json:"keywords,omitempty"`
-	Description      string   `json:"description,omitempty"`
-	IconPath         string   `json:"icon_path,omitempty"`
-	ImagePath        string   `json:"image_path,omitempty"`
-	URL              string   `json:"url,omitempty"`
-	Icon             string   `json:"icon,omitempty"`
-	ShortLink        string   `json:"short_link,omitempty"`
-	ImageURL         string   `json:"image_url,omitempty"`
-	ImageConvertPath string   `json:"image_optimized,omitempty"`
-	CanonicalURL     string   `json:"canonical,omitempty"`
+	Title        string   `json:"title,omitempty"`
+	Language     string   `json:"lang,omitempty"`
+	Direction    string   `json:"dir,omitempty"`
+	Keywords     []string `json:"keywords,omitempty"`
+	Description  string   `json:"description,omitempty"`
+	IconPath     string   `json:"icon_path,omitempty"`
+	ImagePath    string   `json:"image_path,omitempty"`
+	URL          string   `json:"url,omitempty"`
+	Icon         string   `json:"icon,omitempty"`
+	ShortLink    string   `json:"short_link,omitempty"`
+	CanonicalURL string   `json:"canonical,omitempty"`
+
+	ImageURL         string `json:"image_url,omitempty"`
+	ImageWidth       *int   `json:"image_width,omitempty"`
+	ImageHeight      *int   `json:"image_height,omitempty"`
+	ImageConvertPath string `json:"image_optimized,omitempty"`
 
 	VideoURL      string `json:"video_url,omitempty"`
 	VideoType     string `json:"video_type,omitempty"`
@@ -191,6 +193,16 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 			ui.ImageURL = ui.image_url.String()
 
 			ui.ImageConvertPath = imageConvert(ui.image_url, processInfo)
+
+			imageWidthOg, imageWidthOgExist := doc.Find("head meta[property='og:image:width'],head meta[name='og:image:width']").First().Attr("content")
+			if imageWidthOgExist {
+				ui.ImageWidth = sanitizeIntPointer(imageWidthOg)
+			}
+
+			imageHeightOg, imageHeightOgExist := doc.Find("head meta[property='og:image:height'],head meta[name='og:image:height']").First().Attr("content")
+			if imageHeightOgExist {
+				ui.ImageHeight = sanitizeIntPointer(imageHeightOg)
+			}
 		}
 	}
 
@@ -207,8 +219,6 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 			}
 
 			videoWidthOg, videoWidthOgExist := doc.Find("head meta[property='og:video:width'],head meta[name='og:video:width']").First().Attr("content")
-			fmt.Println("videoWidthOg", videoWidthOg)
-
 			if videoWidthOgExist {
 				ui.VideoWidth = sanitizeIntPointer(videoWidthOg)
 			}
