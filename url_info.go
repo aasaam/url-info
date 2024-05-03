@@ -34,6 +34,8 @@ type urlInfo struct {
 	url        *url.URL
 	short_link *url.URL
 	image_url  *url.URL
+	video_url  *url.URL
+	audio_url  *url.URL
 	canonical  *url.URL
 
 	Title            string   `json:"title,omitempty"`
@@ -49,6 +51,16 @@ type urlInfo struct {
 	ImageURL         string   `json:"image_url,omitempty"`
 	ImageConvertPath string   `json:"image_optimized,omitempty"`
 	CanonicalURL     string   `json:"canonical,omitempty"`
+
+	VideoURL      string `json:"video_url,omitempty"`
+	VideoType     string `json:"video_type,omitempty"`
+	VideoWidth    *int   `json:"video_width,omitempty"`
+	VideoHeight   *int   `json:"video_height,omitempty"`
+	VideoDuration *int   `json:"video_duration,omitempty"`
+
+	AudioURL      string `json:"audio_url,omitempty"`
+	AudioType     string `json:"audio_type,omitempty"`
+	AudioDuration *int   `json:"audio_duration,omitempty"`
 }
 
 type urlInfoProcess struct {
@@ -178,6 +190,54 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 			ui.ImageURL = ui.image_url.String()
 
 			ui.ImageConvertPath = imageConvert(ui.image_url, processInfo)
+		}
+	}
+
+	videoOg, videoOgExist := doc.Find("head meta[property='og:video'],head meta[name='og:video']").First().Attr("content")
+	if videoOgExist {
+		videoOgURLString, videoOgURLStringErr := purell.NormalizeURLString(videoOg, defaultURLSanitize)
+		if videoOgURLStringErr == nil {
+			ui.video_url, _ = url.Parse(videoOgURLString)
+			ui.VideoURL = ui.video_url.String()
+
+			videoTypeOg, videoTypeOgExist := doc.Find("head meta[property='og:video:type'],head meta[name='og:video:type']").First().Attr("content")
+			if videoTypeOgExist {
+				ui.VideoType = sanitizeString(videoTypeOg)
+			}
+
+			videoWidthOg, videoWidthOgExist := doc.Find("head meta[property='og:video:width'],head meta[name='og:video:width']").First().Attr("content")
+			if videoWidthOgExist {
+				ui.VideoWidth = sanitizeIntPointer(videoWidthOg)
+			}
+
+			videoHeightOg, videoHeightOgExist := doc.Find("head meta[property='og:video:height'],head meta[name='og:video:height']").First().Attr("content")
+			if videoHeightOgExist {
+				ui.VideoHeight = sanitizeIntPointer(videoHeightOg)
+			}
+
+			videoDurationOg, videoDurationOgExist := doc.Find("head meta[property='og:video:duration'],head meta[name='og:video:duration']").First().Attr("content")
+			if videoDurationOgExist {
+				ui.VideoDuration = sanitizeIntPointer(videoDurationOg)
+			}
+		}
+	}
+
+	audioOg, audioOgExist := doc.Find("head meta[property='og:audio'],head meta[name='og:audio']").First().Attr("content")
+	if audioOgExist {
+		audioOgURLString, audioOgURLStringErr := purell.NormalizeURLString(audioOg, defaultURLSanitize)
+		if audioOgURLStringErr == nil {
+			ui.audio_url, _ = url.Parse(audioOgURLString)
+			ui.AudioURL = ui.audio_url.String()
+
+			audioTypeOg, audioTypeOgExist := doc.Find("head meta[property='og:audio:type'],head meta[name='og:audio:type']").First().Attr("content")
+			if audioTypeOgExist {
+				ui.AudioType = sanitizeString(audioTypeOg)
+			}
+
+			audioDurationOg, audioDurationOgExist := doc.Find("head meta[property='og:audio:duration'],head meta[name='og:audio:duration']").First().Attr("content")
+			if audioDurationOgExist {
+				ui.AudioDuration = sanitizeIntPointer(audioDurationOg)
+			}
 		}
 	}
 

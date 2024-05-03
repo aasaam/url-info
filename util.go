@@ -180,6 +180,14 @@ func sanitizeText(t string) string {
 	return sanitizeString(stripTagger.Sanitize(t))
 }
 
+func sanitizeIntPointer(s string) *int {
+	i, e := strconv.Atoi(s)
+	if e != nil || i <= 0 {
+		return nil
+	}
+	return nil
+}
+
 func parseKeywords(inpKeywords string) []string {
 	r := []string{}
 	if inpKeywords == "" {
