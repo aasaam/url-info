@@ -31,12 +31,14 @@ var defaultURLSanitize purell.NormalizationFlags = purell.FlagLowercaseScheme |
 	purell.FlagUppercaseEscapes
 
 type urlInfo struct {
-	url        *url.URL
-	short_link *url.URL
-	image_url  *url.URL
-	video_url  *url.URL
-	audio_url  *url.URL
-	canonical  *url.URL
+	url              *url.URL
+	canonical        *url.URL
+	short_link       *url.URL
+	image_url        *url.URL
+	video_url        *url.URL
+	video_secure_url *url.URL
+	audio_url        *url.URL
+	audio_secure_url *url.URL
 
 	Title        string   `json:"title,omitempty"`
 	Language     string   `json:"lang,omitempty"`
@@ -55,15 +57,17 @@ type urlInfo struct {
 	ImageHeight      *int   `json:"image_height,omitempty"`
 	ImageConvertPath string `json:"image_optimized,omitempty"`
 
-	VideoURL      string `json:"video_url,omitempty"`
-	VideoType     string `json:"video_type,omitempty"`
-	VideoWidth    *int   `json:"video_width,omitempty"`
-	VideoHeight   *int   `json:"video_height,omitempty"`
-	VideoDuration *int   `json:"video_duration,omitempty"`
+	VideoURL       string `json:"video_url,omitempty"`
+	VideoSecureURL string `json:"video_secure_url,omitempty"`
+	VideoType      string `json:"video_type,omitempty"`
+	VideoWidth     *int   `json:"video_width,omitempty"`
+	VideoHeight    *int   `json:"video_height,omitempty"`
+	VideoDuration  *int   `json:"video_duration,omitempty"`
 
-	AudioURL      string `json:"audio_url,omitempty"`
-	AudioType     string `json:"audio_type,omitempty"`
-	AudioDuration *int   `json:"audio_duration,omitempty"`
+	AudioURL       string `json:"audio_url,omitempty"`
+	AudioSecureURL string `json:"audio_secure_url,omitempty"`
+	AudioType      string `json:"audio_type,omitempty"`
+	AudioDuration  *int   `json:"audio_duration,omitempty"`
 }
 
 type urlInfoProcess struct {
@@ -213,6 +217,15 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 			ui.video_url, _ = url.Parse(videoOgURLString)
 			ui.VideoURL = ui.video_url.String()
 
+			videoSecureLinkOg, videoSecureLinkExist := doc.Find("head meta[property='og:video:secure_url'],head meta[name='og:video:secure_url']").First().Attr("content")
+			if videoSecureLinkExist {
+				videoSecureLinkOgURLString, videoSecureLinkOgURLStringErr := purell.NormalizeURLString(videoSecureLinkOg, defaultURLSanitize)
+				if videoSecureLinkOgURLStringErr == nil {
+					ui.video_secure_url, _ = url.Parse(videoSecureLinkOgURLString)
+					ui.VideoSecureURL = ui.video_secure_url.String()
+				}
+			}
+
 			videoTypeOg, videoTypeOgExist := doc.Find("head meta[property='og:video:type'],head meta[name='og:video:type']").First().Attr("content")
 			if videoTypeOgExist {
 				ui.VideoType = sanitizeString(videoTypeOg)
@@ -241,6 +254,15 @@ func (ui *urlInfo) process(processInfo urlInfoProcess) error {
 		if audioOgURLStringErr == nil {
 			ui.audio_url, _ = url.Parse(audioOgURLString)
 			ui.AudioURL = ui.audio_url.String()
+
+			audioSecureLinkOg, audioSecureLinkExist := doc.Find("head meta[property='og:audio:secure_url'],head meta[name='og:audio:secure_url']").First().Attr("content")
+			if audioSecureLinkExist {
+				audioSecureLinkOgURLString, audioSecureLinkOgURLStringErr := purell.NormalizeURLString(audioSecureLinkOg, defaultURLSanitize)
+				if audioSecureLinkOgURLStringErr == nil {
+					ui.audio_secure_url, _ = url.Parse(audioSecureLinkOgURLString)
+					ui.AudioSecureURL = ui.audio_secure_url.String()
+				}
+			}
 
 			audioTypeOg, audioTypeOgExist := doc.Find("head meta[property='og:audio:type'],head meta[name='og:audio:type']").First().Attr("content")
 			if audioTypeOgExist {
