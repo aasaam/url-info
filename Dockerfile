@@ -1,4 +1,4 @@
-FROM golang:1.19-buster AS builder
+FROM golang:1.22-buster AS builder
 
 ADD . /src
 
