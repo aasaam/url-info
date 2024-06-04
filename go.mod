@@ -9,7 +9,7 @@ require (
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/urfave/cli/v2 v2.27.2
 	golang.org/x/net v0.24.0
-	golang.org/x/text v0.14.0
+	golang.org/x/text v0.16.0
 )
 
 require (
