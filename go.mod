@@ -5,7 +5,7 @@ go 1.22
 require (
 	github.com/PuerkitoBio/goquery v1.9.2
 	github.com/PuerkitoBio/purell v1.2.1
-	github.com/gofiber/fiber/v2 v2.52.4
+	github.com/gofiber/fiber/v2 v2.52.5
 	github.com/microcosm-cc/bluemonday v1.0.26
 	github.com/urfave/cli/v2 v2.27.2
 	golang.org/x/net v0.24.0
